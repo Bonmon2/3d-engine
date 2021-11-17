@@ -1,0 +1,9 @@
+This project doesn't come with precompiled glfw library files
+you should do either:
+    Download the latest prebuilt from the GLFW website: https://www.glfw.org/
+        You may find that this doesn't work
+Or:
+    Download the source and compile it using cmake. To do this:
+        run cmake in the glfw source folder using cmake -S . -B build/ This generates files inside the subdirectory build
+        go into the build folder, and run make then run make install
+        This will almost certainly work
