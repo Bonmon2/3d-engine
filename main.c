@@ -7,12 +7,14 @@
 float vertices[] =
 {
     -0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f,
+    -0.5f,  0.5f, 0.0f,
+     0.5f,  0.5f, 0.0f,
      0.5f, -0.5f, 0.0f
 };
 
 int indices[] = {
-    1, 2, 3
+    0, 1, 2,
+    2, 3, 0
 };
 
 
@@ -35,6 +37,7 @@ void compileErrors(unsigned int shader, const char* type) {
 		}
 	}
 }
+
 
 int main(void)
 {
@@ -68,23 +71,30 @@ int main(void)
     {
         const char* vertShaderSrc;
         const char* fragShaderSrc;
-        /* 
-    
-        TODO: Fix file reading
-    
-        */
 
-        /*char vertShaderBuffer[1000];
-        FILE* vertShaderFile = fopen("shader.vert", "r");
+        char vertShaderBuffer[1000];
+        FILE* vertShaderFile = fopen("shader.vert", "rt");
+
+        if (vertShaderFile == NULL) {
+            printf("Fail reading shader.vert");
+        }
+
         fread(vertShaderBuffer, 1, 1000, vertShaderFile);
-        fclose(vertShaderFile);*/
-        vertShaderSrc = "#version 330 core\nlayout (location = 0) in vec3 aPos;\nvoid main() {\ngl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n}";
+        fclose(vertShaderFile);
 
-        /*char fragShaderBuffer[1000];
+        vertShaderSrc = vertShaderBuffer;
+
+        printf("%s\n", vertShaderSrc);
+
+        char fragShaderBuffer[1000];
         FILE* fragShaderFile = fopen("shader.frag", "r");
         fread(fragShaderBuffer, 1, 1000, fragShaderFile);
-        fclose(fragShaderFile);*/
-        fragShaderSrc = "#version 330 core\nout vec4 FragColor;\nvoid main() {\nFragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n}";
+        fclose(fragShaderFile);
+
+        fragShaderSrc = fragShaderBuffer;
+
+        //fragShaderSrc = "#version 330 core\nout vec4 FragColor;\nvoid main() {\nFragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n}";
+        printf("%s\n", fragShaderSrc);
 
 
         GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
@@ -110,6 +120,7 @@ int main(void)
 
     GLuint VAO;
     GLuint VBO;
+    GLuint EBO;
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -118,13 +129,16 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
     glViewport(0, 0, 800, 800);
@@ -137,7 +151,7 @@ int main(void)
 
         glUseProgram(SP);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, 0);
         
 
         /* Swap front and back buffers */

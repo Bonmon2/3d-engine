@@ -9,6 +9,12 @@ add_executable(${PROJECT_NAME} main.c)
 #Include GLFW header files and Link GLFW library
 include_directories(${CMAKE_SOURCE_DIR}/ext/GLFW/include ${CMAKE_SOURCE_DIR}/ext/glad/include)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/shader.vert
+    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/shader.frag
+    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+
 FILE(GLOB lib "ext/GLFW/lib/libglfw3.a")
 
 #Checks for library file
