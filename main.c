@@ -87,7 +87,7 @@ int main(void)
         printf("%s\n", vertShaderSrc);
 
         char fragShaderBuffer[1000];
-        FILE* fragShaderFile = fopen("shader.frag", "r");
+        FILE* fragShaderFile = fopen("shader.frag", "rt");
         fread(fragShaderBuffer, 1, 1000, fragShaderFile);
         fclose(fragShaderFile);
 
